@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Awong Moodle Compact</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        .custom-scrollbar::-webkit-scrollbar { width: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #e2e8f0; border-radius: 10px; }
+    </style>
+</head>
+<body class="bg-gray-100 text-slate-900 overflow-hidden">
+    <div id="app"></div>
+
+    <script>
+        // Data Dasar
+        const users = [
+            { id: 'awong', name: "Awong", role: "Siswa (Kucing)", avatar: "🐱", color: "bg-yellow-400" },
+            { id: 1, name: "Budi Santoso", role: "Siswa", avatar: "B", color: "bg-blue-200" },
+            { id: 2, name: "Siti Aminah", role: "Siswa", avatar: "S", color: "bg-pink-200" },
+            { id: 3, name: "Andi Wijaya", role: "Siswa", avatar: "A", color: "bg-green-200" },
+            { id: 4, name: "Lani Meow", role: "Siswa", avatar: "L", color: "bg-purple-200" },
+            { id: 5, name: "Edo Pratama", role: "Siswa", avatar: "E", color: "bg-orange-200" },
+            { id: 6, name: "Meitha Kucing", role: "Siswa", avatar: "M", color: "bg-red-200" },
+            { id: 7, name: "Rizky Transport", role: "Siswa", avatar: "R", color: "bg-teal-200" },
+            { id: 8, name: "Dewi Lestari", role: "Siswa", avatar: "D", color: "bg-indigo-200" },
+            { id: 9, name: "Fajar Sidik", role: "Siswa", avatar: "F", color: "bg-yellow-200" },
+            { id: 10, name: "Gita Cahaya", role: "Siswa", avatar: "G", color: "bg-rose-200" },
+            { id: 11, name: "Reyhan NET", role: "Siswa", avatar: "RN", color: "bg-slate-300" },
+        ];
+
+        const coursesData = [
+            { id: 1, title: "Matematika", icon: "📐", color: "bg-blue-500", content: "Hitung volume bagasi Alphard p x l x t!", assignment: "Berapa volume kotak kucing 40cm?" },
+            { id: 2, title: "IPA: Tata Surya", icon: "🌍", color: "bg-purple-500", content: "Bumi berputar seperti rute TransJakarta.", assignment: "Planet terdekat Matahari?" },
+            { id: 3, title: "IPS: Transportasi", icon: "🚆", color: "bg-green-500", content: "Integrasi MRT dan KRL Jabodetabek.", assignment: "Sebutkan rute bus depan rumahmu!" },
+            { id: 4, title: "B. Indonesia", icon: "📺", color: "bg-red-500", content: "Gaya bahasa berita di NET. TV.", assignment: "Ringkas acara NET. jam 9 pagi tadi." }
+        ];
+
+        // State Management Sederhana
+        let state = {
+            currentUser: null,
+            activeTab: 'dashboard',
+            selectedCourse: null,
+            selectedFriendChat: null,
+            chatText: "",
+            messages: {},
+            confirmationMessage: false
+        };
+
+        function render() {
+            const app = document.getElementById('app');
+            
+            // Layar Login
+            if (!state.currentUser) {
+                app.innerHTML = `
+                <div class="min-h-screen bg-slate-900 flex items-center justify-center p-4">
+                    <div class="bg-white w-full max-w-xs rounded-3xl p-6 shadow-2xl animate-in zoom-in duration-300">
+                        <h1 class="text-xl font-black text-center mb-4">Login Awong 🐱</h1>
+                        <div class="space-y-2 max-h-64 overflow-y-auto pr-1 custom-scrollbar">
+                            ${users.map(u => `
+                                <button onclick="login('${u.id}')" class="w-full flex items-center gap-3 p-2 rounded-xl hover:bg-indigo-50 border border-gray-100 transition-all text-left">
+                                    <div class="${u.color} w-7 h-7 rounded-full flex items-center justify-center font-bold text-xs shadow-sm">${u.avatar}</div>
+                                    <span class="text-sm font-bold truncate">${u.name}</span>
+                                </button>
+                            `).join('')}
+                        </div>
+                    </div>
+                </div>`;
+                return;
+            }
+
+            // Layout Utama
+            app.innerHTML = `
+            <div class="flex h-screen bg-gray-100 text-slate-900 overflow-hidden font-sans">
+                <!-- Notifikasi -->
+                ${state.confirmationMessage ? `
+                <div class="fixed top-4 left-1/2 -translate-x-1/2 bg-green-500 text-white px-6 py-2 rounded-full shadow-2xl z-[300] animate-bounce">
+                    <span class="font-bold text-sm text-center">tugas akan segera terkonfirmasi</span>
+                </div>` : ''}
+
+                <!-- Sidebar -->
+                <div class="w-20 md:w-56 bg-indigo-950 text-white flex flex-col shadow-xl z-20 transition-all">
+                    <div class="p-4 flex items-center justify-center md:justify-start gap-2 border-b border-white/10">
+                        <i data-lucide="graduation-cap" class="text-yellow-400 w-6 h-6"></i>
+                        <h1 class="hidden md:block font-black text-xs uppercase tracking-widest">Moodle</h1>
+                    </div>
+                    <nav class="flex-1 p-2 space-y-1">
+                        <button onclick="setTab('dashboard')" class="w-full flex items-center justify-center md:justify-start gap-3 p-3 rounded-xl transition-all ${state.activeTab === 'dashboard' ? 'bg-indigo-600' : 'hover:bg-indigo-900 opacity-60'}">
+                            <i data-lucide="layout-dashboard" class="w-5 h-5"></i>
+                            <span class="hidden md:block text-xs font-bold">Home</span>
+                        </button>
+                        <button onclick="setTab('courses')" class="w-full flex items-center justify-center md:justify-start gap-3 p-3 rounded-xl transition-all ${state.activeTab === 'courses' ? 'bg-indigo-600' : 'hover:bg-indigo-900 opacity-60'}">
+                            <i data-lucide="book-open" class="w-5 h-5"></i>
+                            <span class="hidden md:block text-xs font-bold">Materi</span>
+                        </button>
+                        <button onclick="setTab('classmates')" class="w-full flex items-center justify-center md:justify-start gap-3 p-3 rounded-xl transition-all ${state.activeTab === 'classmates' ? 'bg-indigo-600' : 'hover:bg-indigo-900 opacity-60'}">
+                            <i data-lucide="users" class="w-5 h-5"></i>
+                            <span class="hidden md:block text-xs font-bold">Teman</span>
+                        </button>
+                    </nav>
+                    <div class="p-2 border-t border-white/10">
+                        <button onclick="logout()" class="w-full flex items-center justify-center p-3 text-red-400 hover:bg-red-500/10 rounded-xl transition-all">
+                            <i data-lucide="log-out" class="w-5 h-5"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Konten -->
+                <div class="flex-1 flex flex-col overflow-hidden">
+                    <header class="bg-white border-b px-6 py-3 flex justify-between items-center">
+                        <h2 class="font-black text-sm uppercase tracking-widest">${state.activeTab}</h2>
+                        <div class="flex items-center gap-2">
+                            <span class="text-[10px] font-bold text-slate-400">09:00 AM</span>
+                            <div class="w-8 h-8 bg-yellow-400 rounded-full flex items-center justify-center shadow-inner border border-yellow-500">${state.currentUser.avatar}</div>
+                        </div>
+                    </header>
+
+                    <main class="flex-1 overflow-y-auto p-4 custom-scrollbar">
+                        ${renderTabContent()}
+                    </main>
+                </div>
+
+                <!-- Modal Chat Mungil -->
+                ${state.selectedFriendChat ? `
+                <div class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm flex items-center justify-center z-[200] p-4" onclick="closeChat()">
+                    <div class="bg-white w-full max-w-[300px] h-[400px] rounded-[30px] shadow-2xl flex flex-col overflow-hidden animate-in zoom-in-95 duration-200" onclick="event.stopPropagation()">
+                        <div class="bg-indigo-600 px-4 py-3 text-white flex justify-between items-center shrink-0">
+                            <div class="flex items-center gap-2">
+                                <div class="w-6 h-6 bg-white/20 rounded-md flex items-center justify-center font-black text-[10px]">${state.selectedFriendChat.avatar}</div>
+                                <span class="font-black text-[10px] truncate w-24">${state.selectedFriendChat.name}</span>
+                            </div>
+                            <button onclick="closeChat()" class="p-1 hover:bg-red-500 rounded transition-all"><i data-lucide="x" class="w-4 h-4"></i></button>
+                        </div>
+                        <div class="flex-1 p-4 overflow-y-auto bg-gray-50/50 space-y-3 custom-scrollbar" id="chat-box">
+                            ${renderMessages()}
+                        </div>
+                        <div class="p-3 bg-white border-t flex gap-2 shrink-0">
+                            <input id="chat-input" onkeydown="handleEnter(event)" class="flex-1 bg-gray-100 rounded-lg px-3 py-2 outline-none focus:ring-2 focus:ring-indigo-100 font-bold text-[10px]" placeholder="Tulis..." value="${state.chatText}" oninput="state.chatText = this.value">
+                            <button onclick="sendMessage()" class="bg-indigo-600 text-white p-2 rounded-lg shadow-md hover:bg-indigo-700 transition-colors"><i data-lucide="send" class="w-4 h-4"></i></button>
+                        </div>
+                    </div>
+                </div>` : ''}
+            </div>`;
+
+            lucide.createIcons();
+            if (state.selectedFriendChat) {
+                const box = document.getElementById('chat-box');
+                box.scrollTop = box.scrollHeight;
+                document.getElementById('chat-input').focus();
+            }
+        }
+
+        function renderTabContent() {
+            if (state.activeTab === 'dashboard') {
+                return `
+                <div class="space-y-4">
+                    <div class="bg-indigo-600 p-6 rounded-3xl text-white shadow-lg relative overflow-hidden group">
+                        <div class="relative z-10">
+                            <h3 class="font-black text-lg">Halo, ${state.currentUser.name}!</h3>
+                            <p class="text-xs opacity-80">Siap naik MRT dan belajar hari ini?</p>
+                        </div>
+                        <div class="absolute right-[-10px] bottom-[-10px] text-8xl opacity-10 rotate-12 transition-transform group-hover:scale-110">🚆</div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        ${coursesData.map(c => `
+                            <div onclick="openCourse('${c.id}')" class="bg-white p-4 rounded-2xl border border-gray-200 shadow-sm hover:scale-105 transition-all cursor-pointer">
+                                <div class="${c.color} w-8 h-8 rounded-lg flex items-center justify-center text-white mb-2 shadow-sm">${c.icon}</div>
+                                <h4 class="font-bold text-[10px] text-slate-800">${c.title}</h4>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>`;
+            }
+
+            if (state.activeTab === 'courses') {
+                if (!state.selectedCourse) {
+                    return `
+                    <div class="grid grid-cols-1 gap-3">
+                        ${coursesData.map(c => `
+                            <div onclick="openCourse('${c.id}')" class="bg-white p-4 rounded-2xl flex items-center gap-4 cursor-pointer hover:shadow-md transition-all border border-gray-100">
+                                <div class="${c.color} w-10 h-10 rounded-xl flex items-center justify-center text-white font-bold shadow-sm text-xl">${c.icon}</div>
+                                <span class="font-bold text-xs">${c.title}</span>
+                            </div>
+                        `).join('')}
+                    </div>`;
+                } else {
+                    return `
+                    <div class="max-w-2xl mx-auto">
+                        <div class="bg-white rounded-3xl shadow-xl overflow-hidden animate-in zoom-in-95 duration-300">
+                            <div class="${state.selectedCourse.color} p-4 text-white flex justify-between items-center shadow-inner">
+                                <h2 class="font-black text-xs uppercase tracking-tighter">${state.selectedCourse.title}</h2>
+                                <button onclick="setTab('courses')"><i data-lucide="chevron-left" class="w-5 h-5"></i></button>
+                            </div>
+                            <div class="p-6 space-y-4">
+                                <p class="text-sm font-bold text-slate-600 italic leading-relaxed">"${state.selectedCourse.content}"</p>
+                                <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200">
+                                    <p class="text-[10px] font-black mb-3 text-indigo-900 uppercase">Tugas Mandiri:</p>
+                                    <p class="text-xs font-bold mb-5 text-slate-700">${state.selectedCourse.assignment}</p>
+                                    <button onclick="submitTask()" class="w-full bg-indigo-600 text-white py-3 rounded-xl text-xs font-black shadow-lg shadow-indigo-100 active:scale-95 transition-all">KUMPULKAN TUGAS</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>`;
+                }
+            }
+
+            if (state.activeTab === 'classmates') {
+                return `
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    ${users.filter(u => u.id !== state.currentUser.id).map(f => `
+                        <div class="bg-white p-3 rounded-2xl border border-gray-200 flex items-center gap-3 shadow-sm">
+                            <div class="${f.color} w-8 h-8 rounded-full flex items-center justify-center font-bold text-xs shadow-inner">${f.avatar}</div>
+                            <span class="flex-1 font-bold text-[10px] truncate text-slate-700">${f.name}</span>
+                            <button onclick="openChat('${f.id}')" class="p-2 bg-indigo-50 text-indigo-600 rounded-lg hover:bg-indigo-600 hover:text-white transition-colors shadow-sm">
+                                <i data-lucide="message-square" class="w-4 h-4"></i>
+                            </button>
+                        </div>
+                    `).join('')}
+                </div>`;
+            }
+        }
+
+        function renderMessages() {
+            const list = state.messages[state.selectedFriendChat.id] || [];
+            if (list.length === 0) return `<p class="text-[10px] text-center mt-10 text-slate-300 font-bold italic">Belum ada komentar...</p>`;
+            return list.map(msg => `
+                <div class="flex flex-col ${msg.sender === state.currentUser.name ? 'items-end' : 'items-start'}">
+                    <div class="p-2.5 rounded-xl max-w-[90%] text-[10px] font-bold shadow-sm ${msg.sender === state.currentUser.name ? 'bg-indigo-600 text-white rounded-tr-none' : 'bg-white text-slate-800 rounded-tl-none border border-gray-100'}">
+                        ${msg.text}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Fungsi Aksi
+        function login(id) {
+            state.currentUser = users.find(u => u.id === id);
+            render();
+        }
+
+        function logout() {
+            state.currentUser = null;
+            render();
+        }
+
+        function setTab(tab) {
+            state.activeTab = tab;
+            state.selectedCourse = null;
+            state.selectedFriendChat = null;
+            render();
+        }
+
+        function openCourse(id) {
+            state.selectedCourse = coursesData.find(c => c.id == id);
+            state.activeTab = 'courses';
+            render();
+        }
+
+        function openChat(friendId) {
+            state.selectedFriendChat = users.find(u => u.id == friendId);
+            render();
+        }
+
+        function closeChat() {
+            state.selectedFriendChat = null;
+            state.chatText = "";
+            render();
+        }
+
+        function sendMessage() {
+            if (!state.chatText.trim()) return;
+            const fid = state.selectedFriendChat.id;
+            const userMsg = { sender: state.currentUser.name, text: state.chatText };
+            
+            if (!state.messages[fid]) state.messages[fid] = [];
+            state.messages[fid].push(userMsg);
+            
+            const savedText = state.chatText;
+            state.chatText = "";
+            render();
+
+            setTimeout(() => {
+                const autoReply = { sender: state.selectedFriendChat.name, text: `Halo Awong! Komentar "${savedText}" keren. Ayo lanjut belajar!` };
+                state.messages[fid].push(autoReply);
+                render();
+            }, 1000);
+        }
+
+        function handleEnter(e) {
+            if (e.key === 'Enter') sendMessage();
+        }
+
+        function submitTask() {
+            state.confirmationMessage = true;
+            render();
+            setTimeout(() => {
+                state.confirmationMessage = false;
+                render();
+            }, 3000);
+        }
+
+        // Jalankan awal
+        render();
+    </script>
+</body>
+</html>
+
