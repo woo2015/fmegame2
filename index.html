@@ -1,312 +1,1198 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Awong Moodle Compact</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://unpkg.com/lucide@latest"></script>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Website Resmi Kelas 8 Berani | Kreatif dan Berprestasi</title>
+    <meta
+      name="description"
+      content="Website resmi Kelas 8 Berani, pusat informasi modern untuk profil kelas, struktur organisasi, jadwal piket, pengumuman, prestasi, dan kontak."
+    />
+    <meta property="og:title" content="Website Resmi Kelas 8 Berani" />
+    <meta
+      property="og:description"
+      content="Belajar, Berkarya, Berprestasi, dan Bersama Membangun Masa Depan bersama Kelas 8 Berani."
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="id_ID" />
+    <link
+      rel="icon"
+      type="image/svg+xml"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%232563EB'/%3E%3Cpath d='M16 26 32 18l16 8-16 8-16-8Zm4 7v8c0 3 5 6 12 6s12-3 12-6v-8' fill='none' stroke='white' stroke-width='4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"
+    />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Poppins:wght@600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="https://unpkg.com/aos@2.3.4/dist/aos.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"
+    />
+
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap');
-        body { font-family: 'Inter', sans-serif; }
-        .custom-scrollbar::-webkit-scrollbar { width: 4px; }
-        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
-        .custom-scrollbar::-webkit-scrollbar-thumb { background: #e2e8f0; border-radius: 10px; }
+      :root {
+        --primary: #2563eb;
+        --secondary: #ffffff;
+        --bg-soft: #f5f7fa;
+        --accent: #f59e0b;
+        --success: #10b981;
+        --text: #1f2937;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        margin: 0;
+        font-family: "Inter", sans-serif;
+        color: var(--text);
+        background: var(--bg-soft);
+        line-height: 1.6;
+      }
+
+      img {
+        max-width: 100%;
+        display: block;
+      }
+
+      .container {
+        width: min(1120px, 92%);
+        margin-inline: auto;
+      }
+
+      .section {
+        padding: 84px 0;
+      }
+
+      .section-title {
+        text-align: center;
+        max-width: 760px;
+        margin: 0 auto 48px;
+      }
+
+      .section-title h2 {
+        margin: 0;
+        font-family: "Poppins", sans-serif;
+        font-size: clamp(1.7rem, 3vw, 2.3rem);
+        line-height: 1.2;
+      }
+
+      .section-title p {
+        margin: 12px 0 0;
+        color: #4b5563;
+      }
+
+      .loading {
+        position: fixed;
+        inset: 0;
+        display: grid;
+        place-items: center;
+        background: #fff;
+        z-index: 9999;
+        transition: opacity 0.35s ease;
+      }
+
+      .loading.hidden {
+        opacity: 0;
+        pointer-events: none;
+      }
+
+      .spinner {
+        width: 58px;
+        height: 58px;
+        border-radius: 999px;
+        border: 4px solid #dbeafe;
+        border-top-color: var(--primary);
+        animation: spin 0.8s linear infinite;
+        margin-inline: auto;
+      }
+
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
+      @keyframes floating {
+        0%,
+        100% {
+          transform: translateY(0);
+        }
+        50% {
+          transform: translateY(-6px);
+        }
+      }
+
+      .floating {
+        animation: floating 2.4s ease-in-out infinite;
+      }
+
+      .navbar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        z-index: 100;
+        transition: all 0.3s ease;
+      }
+
+      .navbar.scrolled {
+        background: rgba(255, 255, 255, 0.92);
+        backdrop-filter: blur(10px);
+        box-shadow: 0 12px 30px rgba(15, 23, 42, 0.08);
+      }
+
+      .nav-wrap {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 16px 0;
+      }
+
+      .brand {
+        font-family: "Poppins", sans-serif;
+        color: var(--primary);
+        text-decoration: none;
+        font-size: 1.2rem;
+        font-weight: 700;
+      }
+
+      .nav-menu {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        gap: 18px;
+      }
+
+      .mobile-only {
+        display: none;
+      }
+
+      .nav-menu a {
+        text-decoration: none;
+        color: var(--text);
+        font-weight: 600;
+        font-size: 0.9rem;
+        transition: color 0.2s ease;
+      }
+
+      .nav-menu a:hover {
+        color: var(--accent);
+      }
+
+      .menu-btn {
+        display: none;
+        border: 0;
+        background: #fff;
+        color: var(--primary);
+        width: 42px;
+        height: 42px;
+        border-radius: 10px;
+        cursor: pointer;
+        font-size: 1.3rem;
+        font-weight: 700;
+      }
+
+      .icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-style: normal;
+        font-weight: 700;
+        line-height: 1;
+      }
+
+      .hero {
+        min-height: 100svh;
+        display: flex;
+        align-items: center;
+        background:
+          linear-gradient(110deg, rgba(15, 23, 42, 0.85), rgba(37, 99, 235, 0.66)),
+          url("https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&fit=crop&w=2200&q=80")
+            center / cover no-repeat;
+      }
+
+      .hero-content {
+        max-width: 760px;
+        color: #fff;
+        padding: 130px 0 90px;
+      }
+
+      .hero-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        padding: 8px 14px;
+        border: 1px solid rgba(255, 255, 255, 0.25);
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.13);
+        backdrop-filter: blur(8px);
+        font-weight: 600;
+        margin-bottom: 18px;
+      }
+
+      .hero h1 {
+        margin: 0;
+        font-family: "Poppins", sans-serif;
+        font-size: clamp(2rem, 5vw, 3.8rem);
+        line-height: 1.15;
+      }
+
+      .hero p {
+        max-width: 640px;
+        margin: 18px 0 0;
+        color: #e2e8f0;
+        font-size: clamp(1rem, 2.2vw, 1.2rem);
+      }
+
+      .hero-actions {
+        margin-top: 34px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+      }
+
+      .btn {
+        text-decoration: none;
+        border: 0;
+        cursor: pointer;
+        padding: 12px 20px;
+        border-radius: 12px;
+        font-weight: 700;
+        transition: all 0.25s ease;
+      }
+
+      .btn-primary {
+        background: var(--primary);
+        color: #fff;
+      }
+
+      .btn-primary:hover {
+        transform: translateY(-2px);
+        background: #1d4ed8;
+      }
+
+      .btn-glass {
+        color: #fff;
+        border: 1px solid rgba(255, 255, 255, 0.55);
+        background: rgba(255, 255, 255, 0.12);
+        backdrop-filter: blur(8px);
+      }
+
+      .btn-glass:hover {
+        transform: translateY(-2px);
+        background: rgba(255, 255, 255, 0.2);
+      }
+
+      .grid-2,
+      .grid-3,
+      .grid-4 {
+        display: grid;
+        gap: 18px;
+      }
+
+      .grid-2 {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .grid-3 {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .grid-4 {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
+
+      .card {
+        background: #fff;
+        border-radius: 20px;
+        padding: 22px;
+        box-shadow: 0 10px 30px rgba(15, 23, 42, 0.06);
+        transition: transform 0.25s ease, box-shadow 0.25s ease;
+      }
+
+      .card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 16px 32px rgba(15, 23, 42, 0.1);
+      }
+
+      .glass {
+        background: rgba(255, 255, 255, 0.74);
+        border: 1px solid rgba(255, 255, 255, 0.6);
+        backdrop-filter: blur(10px);
+      }
+
+      .stats-card i {
+        color: var(--accent);
+        font-size: 1.5rem;
+      }
+
+      .counter {
+        color: var(--primary);
+        font-family: "Poppins", sans-serif;
+        font-size: 1.85rem;
+        margin-top: 8px;
+      }
+
+      .org-chart {
+        display: grid;
+        gap: 18px;
+        max-width: 920px;
+        margin: 0 auto;
+      }
+
+      .org-level {
+        display: grid;
+        gap: 14px;
+      }
+
+      .org-level.one {
+        grid-template-columns: 1fr;
+        justify-items: center;
+      }
+
+      .org-level.two {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        max-width: 760px;
+        margin: 0 auto;
+      }
+
+      .org-level.three {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .org-node {
+        padding: 16px;
+        border-radius: 16px;
+        background: #fff;
+        box-shadow: 0 10px 30px rgba(15, 23, 42, 0.06);
+        text-align: center;
+        min-height: 96px;
+        height: 120px;
+        max-width: 360px;
+        width: 100%;
+        margin: 0 auto;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+      }
+
+      .org-node strong {
+        display: block;
+        color: #2563eb;
+        font-family: "Poppins", sans-serif;
+        margin-bottom: 4px;
+        min-height: 44px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .org-line {
+        width: 2px;
+        height: 24px;
+        background: #bfdbfe;
+        margin: 0 auto;
+      }
+
+      .table-wrap {
+        overflow-x: auto;
+        border-radius: 20px;
+        box-shadow: 0 10px 30px rgba(15, 23, 42, 0.06);
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        background: #fff;
+        min-width: 680px;
+      }
+
+      th,
+      td {
+        padding: 14px;
+        text-align: left;
+      }
+
+      th {
+        background: var(--primary);
+        color: #fff;
+      }
+
+      tbody tr:nth-child(odd) {
+        background: #f8fafc;
+      }
+
+      .badge {
+        color: var(--success);
+        font-size: 0.9rem;
+        font-weight: 600;
+      }
+
+      .link-btn {
+        border: 0;
+        background: transparent;
+        color: var(--primary);
+        font-weight: 700;
+        cursor: pointer;
+      }
+
+      .achievement {
+        background: #f8faff;
+      }
+
+      .achievement i {
+        color: var(--accent);
+        font-size: 1.4rem;
+      }
+
+      .timeline {
+        max-width: 760px;
+        margin: 0 auto;
+      }
+
+      .timeline-item {
+        display: grid;
+        grid-template-columns: 20px 1fr;
+        gap: 14px;
+      }
+
+      .timeline-dot {
+        margin-top: 10px;
+        width: 12px;
+        height: 12px;
+        border-radius: 999px;
+        background: var(--primary);
+        box-shadow: 0 0 0 5px #dbeafe;
+      }
+
+      .timeline .card {
+        margin-bottom: 14px;
+      }
+
+      .swiper {
+        padding-bottom: 36px !important;
+      }
+
+      .testimonial {
+        background: #f8faff;
+      }
+
+      .testimonial-user {
+        margin-top: 14px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .testimonial-user img {
+        width: 48px;
+        height: 48px;
+        border-radius: 999px;
+        object-fit: cover;
+      }
+
+      .faq-item {
+        border-radius: 16px;
+        overflow: hidden;
+      }
+
+      .faq-question {
+        width: 100%;
+        background: #fff;
+        border: 0;
+        text-align: left;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 16px 18px;
+        font-weight: 700;
+      }
+
+      .faq-answer {
+        background: #fff;
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.3s ease;
+        padding: 0 18px;
+      }
+
+      .faq-item.active .faq-answer {
+        max-height: 180px;
+        padding-bottom: 16px;
+      }
+
+      .faq-item .faq-chevron {
+        transition: transform 0.3s ease;
+      }
+
+      .faq-item.active .faq-chevron {
+        transform: rotate(180deg);
+      }
+
+      .contact-wrap {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 18px;
+      }
+
+      .contact-list p {
+        margin: 0 0 12px;
+      }
+
+      .map {
+        min-height: 300px;
+        border: 0;
+        border-radius: 20px;
+        width: 100%;
+      }
+
+      .footer {
+        background: #111827;
+        color: #d1d5db;
+        padding: 56px 0 20px;
+      }
+
+      .footer-grid {
+        display: grid;
+        grid-template-columns: 1.2fr 1fr 1fr;
+        gap: 18px;
+      }
+
+      .footer h3,
+      .footer h4 {
+        color: #fff;
+        margin-top: 0;
+      }
+
+      .footer a {
+        color: #d1d5db;
+        text-decoration: none;
+      }
+
+      .footer a:hover {
+        color: var(--accent);
+      }
+
+      .socials {
+        display: flex;
+        gap: 10px;
+      }
+
+      .socials a {
+        width: 36px;
+        height: 36px;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.1);
+        display: inline-grid;
+        place-items: center;
+      }
+
+      .copyright {
+        margin-top: 34px;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        padding-top: 16px;
+        text-align: center;
+        font-size: 0.92rem;
+      }
+
+      @media (max-width: 1024px) {
+        .grid-4 {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .grid-3 {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .footer-grid,
+        .contact-wrap {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      @media (max-width: 820px) {
+        .menu-btn {
+          display: inline-grid;
+          place-items: center;
+        }
+
+        .nav-menu {
+          position: absolute;
+          top: 76px;
+          left: 4%;
+          width: 92%;
+          padding: 16px;
+          border-radius: 12px;
+          background: rgba(255, 255, 255, 0.96);
+          box-shadow: 0 12px 30px rgba(15, 23, 42, 0.09);
+          backdrop-filter: blur(8px);
+          display: none;
+          flex-direction: column;
+          gap: 10px;
+        }
+
+        .nav-menu.show {
+          display: flex;
+        }
+
+        .mobile-only {
+          display: block;
+        }
+
+        .grid-2,
+        .grid-3,
+        .grid-4 {
+          grid-template-columns: 1fr;
+        }
+
+        .org-level.two,
+        .org-level.three {
+          grid-template-columns: 1fr;
+        }
+
+        .hero-content {
+          padding-top: 120px;
+        }
+      }
     </style>
-</head>
-<body class="bg-gray-100 text-slate-900 overflow-hidden">
-    <div id="app"></div>
+  </head>
+  <body>
+    <div class="loading" id="loading">
+      <div>
+        <div class="spinner"></div>
+        <p style="margin-top: 12px; font-weight: 700; color: #2563eb">
+          Memuat Website Kelas 8 Berani...
+        </p>
+      </div>
+    </div>
 
+    <header class="navbar" id="navbar">
+      <div class="container nav-wrap">
+        <a href="#beranda" class="brand">Kelas 8 Berani</a>
+        <button class="menu-btn" id="menuBtn" aria-label="Buka menu">
+          <span class="icon">&#9776;</span>
+        </button>
+        <ul class="nav-menu" id="navMenu">
+          <li><a href="#beranda">Beranda</a></li>
+          <li><a href="#profil">Profil Kelas</a></li>
+          <li><a href="#struktur">Struktur Organisasi</a></li>
+          <li><a href="#jadwal">Jadwal Piket</a></li>
+          <li><a href="#prestasi">Prestasi</a></li>
+          <li class="mobile-only">
+            <a href="https://virtualclass.smpm12gkb.sch.id/login/index.php">Virtual Class</a>
+          </li>
+          <li><a href="#pengumuman">Pengumuman</a></li>
+          <li><a href="#kontak">Kontak</a></li>
+        </ul>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero" id="beranda">
+        <div class="container">
+          <div class="hero-content" data-aos="fade-right">
+            <span class="hero-badge">
+              <span class="icon floating">&#9733;</span>
+              Website Resmi Kelas 8 Berani
+            </span>
+            <h1>Selamat Datang di Website Resmi Kelas 8 Berani</h1>
+            <p>
+              Belajar, Berkarya, Berprestasi, dan Bersama Membangun Masa Depan.
+            </p>
+            <div class="hero-actions">
+              <a class="btn btn-primary" href="#profil">Tentang Kami</a>
+              <a class="btn btn-glass" href="#pengumuman">Jelajahi Website</a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="profil">
+        <div class="container">
+          <div class="section-title" data-aos="fade-up">
+            <h2>Profil Kelas</h2>
+            <p>
+              Mengenal lebih dekat Kelas 8 Berani sebagai komunitas belajar yang
+              aktif, kreatif, dan berkarakter.
+            </p>
+          </div>
+
+          <div class="grid-2">
+            <article class="card glass" data-aos="fade-up">
+              <h3>Nama Kelas</h3>
+              <p>Kelas 8 Berani</p>
+            </article>
+            <article class="card glass" data-aos="fade-left">
+              <h3>Motto Kelas</h3>
+              <p>Berani Berkarya, Berani Berprestasi</p>
+            </article>
+            <article class="card glass" data-aos="fade-up">
+              <h3>Visi</h3>
+              <p>
+                Menjadi kelas unggul yang disiplin, kolaboratif, dan inspiratif.
+              </p>
+            </article>
+            <article class="card glass" data-aos="fade-left">
+              <h3>Misi</h3>
+              <p>
+                Meningkatkan semangat belajar, menjaga kebersamaan, dan
+                berkontribusi aktif dalam kegiatan sekolah.
+              </p>
+            </article>
+          </div>
+
+          <article class="card" style="margin-top: 18px" data-aos="fade-up">
+            Kelas 8 Berani adalah ruang belajar yang menjunjung nilai keberanian,
+            tanggung jawab, dan kerja sama. Setiap siswa didorong berkembang
+            dalam bidang akademik maupun non-akademik secara seimbang.
+          </article>
+        </div>
+      </section>
+
+      <section class="section" style="background: #fff">
+        <div class="container">
+          <div class="section-title" data-aos="fade-up">
+            <h2>Statistik Kelas</h2>
+            <p>Data singkat mengenai kekuatan dan capaian kelas 8 Berani.</p>
+          </div>
+          <div class="grid-4">
+            <article class="card stats-card" data-aos="zoom-in">
+              <span class="icon">&#127891;</span>
+              <div class="counter" data-target="36">0</div>
+              <p>Jumlah Siswa</p>
+            </article>
+            <article class="card stats-card" data-aos="zoom-in" data-aos-delay="90">
+              <span class="icon">&#128105;</span>
+              <div class="counter" data-target="1">0</div>
+              <p>Wali Kelas</p>
+            </article>
+            <article class="card stats-card" data-aos="zoom-in" data-aos-delay="180">
+              <span class="icon">&#127942;</span>
+              <div class="counter" data-target="18">0</div>
+              <p>Prestasi</p>
+            </article>
+            <article class="card stats-card" data-aos="zoom-in" data-aos-delay="270">
+              <span class="icon">&#128218;</span>
+              <div class="counter" data-target="12">0</div>
+              <p>Mata Pelajaran</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section org" id="struktur">
+        <div class="container">
+          <div class="section-title" data-aos="fade-up">
+            <h2>Struktur Organisasi</h2>
+            <p>Struktur inti kelas 8 Berani dalam tampilan grafis sederhana.</p>
+          </div>
+          <div class="org-chart" data-aos="fade-up">
+            <div class="org-level one">
+              <article class="org-node">
+                <strong>Wali Kelas</strong>
+                Ibu Dina Puspita
+              </article>
+            </div>
+            <div class="org-line"></div>
+            <div class="org-level one">
+              <article class="org-node">
+                <strong>Ketua Kelas</strong>
+                Rafi Pratama
+              </article>
+            </div>
+            <div class="org-line"></div>
+            <div class="org-level two">
+              <article class="org-node">
+                <strong>Wakil Ketua Kelas</strong>
+                Nabila Putri
+              </article>
+              <article class="org-node">
+                <strong>Sekretaris</strong>
+                Aulia Ramadhan
+              </article>
+            </div>
+            <div class="org-line"></div>
+            <div class="org-level two">
+              <article class="org-node">
+                <strong>Bendahara 1</strong>
+                Siti Rahma
+              </article>
+              <article class="org-node">
+                <strong>Bendahara 2</strong>
+                Dimas Saputra
+              </article>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="jadwal" style="background: #fff">
+        <div class="container">
+          <div class="section-title" data-aos="fade-up">
+            <h2>Jadwal Piket</h2>
+            <p>Jadwal piket harian agar kelas tetap bersih, rapi, dan nyaman.</p>
+          </div>
+          <div class="table-wrap" data-aos="fade-up">
+            <table>
+              <thead>
+                <tr>
+                  <th>Hari</th>
+                  <th>Petugas</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Senin</strong></td>
+                  <td>Rafi, Nabila, Aulia, Siti, Dimas</td>
+                </tr>
+                <tr>
+                  <td><strong>Selasa</strong></td>
+                  <td>Nadia, Fajar, Arkan, Salsa, Rian</td>
+                </tr>
+                <tr>
+                  <td><strong>Rabu</strong></td>
+                  <td>Nadya, Bima, Tio, Lulu, Reza</td>
+                </tr>
+                <tr>
+                  <td><strong>Kamis</strong></td>
+                  <td>Fino, Kinan, Vina, Rara, Bagas</td>
+                </tr>
+                <tr>
+                  <td><strong>Jumat</strong></td>
+                  <td>Aldo, Nisa, Adit, Caca, Farhan</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="pengumuman">
+        <div class="container">
+          <div class="section-title" data-aos="fade-up">
+            <h2>Pengumuman Terbaru</h2>
+            <p>Informasi penting kelas untuk siswa dan orang tua.</p>
+          </div>
+          <div style="max-width: 760px; margin: 0 auto">
+            <article class="card" data-aos="fade-up">
+              <span class="badge">10 Januari 2026</span>
+              <h3>Persiapan Penilaian Tengah Semester</h3>
+              <p>
+                Seluruh siswa diminta mempersiapkan catatan dan modul untuk
+                pelaksanaan PTS mulai pekan depan.
+              </p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="prestasi" style="background: #fff">
+        <div class="container">
+          <div class="section-title" data-aos="fade-up">
+            <h2>Prestasi Kelas</h2>
+            <p>Capaian terbaik siswa kelas 8 Berani sepanjang tahun ajaran.</p>
+          </div>
+          <div class="grid-3">
+            <article class="card achievement" data-aos="zoom-in">
+              <span class="icon">&#127942;</span>
+              <h3>Juara Lomba Cerdas Cermat</h3>
+            </article>
+            <article class="card achievement" data-aos="zoom-in" data-aos-delay="80">
+              <span class="icon">&#127942;</span>
+              <h3>Juara Futsal</h3>
+            </article>
+            <article class="card achievement" data-aos="zoom-in" data-aos-delay="120">
+              <span class="icon">&#127942;</span>
+              <h3>Juara Pidato</h3>
+            </article>
+            <article class="card achievement" data-aos="zoom-in" data-aos-delay="180">
+              <span class="icon">&#127942;</span>
+              <h3>Juara Pramuka</h3>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" style="background: #fff">
+        <div class="container">
+          <div class="section-title" data-aos="fade-up">
+            <h2>Kalender Kegiatan</h2>
+            <p>Agenda utama kelas sepanjang semester.</p>
+          </div>
+          <div class="timeline">
+            <div class="timeline-item" data-aos="fade-left">
+              <span class="timeline-dot"></span>
+              <article class="card"><h3>MPLS</h3><p>Kegiatan orientasi awal semester.</p></article>
+            </div>
+            <div class="timeline-item" data-aos="fade-left" data-aos-delay="80">
+              <span class="timeline-dot"></span>
+              <article class="card"><h3>PTS</h3><p>Penilaian Tengah Semester.</p></article>
+            </div>
+            <div class="timeline-item" data-aos="fade-left" data-aos-delay="140">
+              <span class="timeline-dot"></span>
+              <article class="card"><h3>PAS</h3><p>Penilaian Akhir Semester.</p></article>
+            </div>
+            <div class="timeline-item" data-aos="fade-left" data-aos-delay="190">
+              <span class="timeline-dot"></span>
+              <article class="card"><h3>Class Meeting</h3><p>Ajang kebersamaan dan kreativitas siswa.</p></article>
+            </div>
+            <div class="timeline-item" data-aos="fade-left" data-aos-delay="240">
+              <span class="timeline-dot"></span>
+              <article class="card"><h3>Peringatan Hari Besar</h3><p>Kegiatan tematik dan pembinaan karakter.</p></article>
+            </div>
+            <div class="timeline-item" data-aos="fade-left" data-aos-delay="290">
+              <span class="timeline-dot"></span>
+              <article class="card"><h3>Study Tour</h3><p>Belajar di luar kelas dengan pengalaman baru.</p></article>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" style="background: #fff">
+        <div class="container">
+          <div class="section-title" data-aos="fade-up">
+            <h2>Testimoni Siswa</h2>
+            <p>Pengalaman siswa selama belajar di kelas 8 Berani.</p>
+          </div>
+
+          <div class="swiper" data-aos="fade-up">
+            <div class="swiper-wrapper">
+              <div class="swiper-slide">
+                <article class="card testimonial">
+                  <p>
+                    "Website ini membantu kami akses informasi kelas dengan cepat
+                    dan tampilannya sangat nyaman dipakai."
+                  </p>
+                  <div class="testimonial-user">
+                    <div><strong>Nadya K.</strong><br />8 Berani</div>
+                  </div>
+                </article>
+              </div>
+              <div class="swiper-slide">
+                <article class="card testimonial">
+                  <p>
+                    "Setiap jadwal, pengumuman, dan kegiatan terbaru sekarang
+                    mudah dipantau kapan pun lewat ponsel."
+                  </p>
+                  <div class="testimonial-user">
+                    <div><strong>Arkan P.</strong><br />8 Berani</div>
+                  </div>
+                </article>
+              </div>
+              <div class="swiper-slide">
+                <article class="card testimonial">
+                  <p>
+                    "Desainnya modern dan membuat semangat belajar meningkat
+                    karena semua informasi tersusun rapi."
+                  </p>
+                  <div class="testimonial-user">
+                    <div><strong>Salsa M.</strong><br />8 Berani</div>
+                  </div>
+                </article>
+              </div>
+            </div>
+            <div class="swiper-pagination"></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="container">
+          <div class="section-title" data-aos="fade-up">
+            <h2>FAQ</h2>
+            <p>Pertanyaan umum mengenai aktivitas dan informasi kelas.</p>
+          </div>
+          <div style="max-width: 820px; margin: 0 auto; display: grid; gap: 12px">
+            <article class="card faq-item active" data-aos="fade-up">
+              <button class="faq-question">
+                Bagaimana cara mendapatkan jadwal terbaru?
+                <span class="icon faq-chevron">&#9662;</span>
+              </button>
+              <div class="faq-answer">
+                Cek bagian Jadwal Piket atau Pengumuman terbaru dari wali kelas.
+              </div>
+            </article>
+            <article class="card faq-item" data-aos="fade-up" data-aos-delay="80">
+              <button class="faq-question">
+                Apakah orang tua bisa mengakses website ini?
+                <span class="icon faq-chevron">&#9662;</span>
+              </button>
+              <div class="faq-answer">
+                Bisa. Website ini terbuka untuk siswa dan orang tua agar
+                informasi kelas tersampaikan dengan cepat.
+              </div>
+            </article>
+            <article class="card faq-item" data-aos="fade-up" data-aos-delay="140">
+              <button class="faq-question">
+                Bagaimana cara mengirim dokumentasi kegiatan?
+                <span class="icon faq-chevron">&#9662;</span>
+              </button>
+              <div class="faq-answer">
+                Kirim informasi ke admin kelas melalui WhatsApp agar dapat
+                diumumkan secara resmi.
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="kontak" style="background: #fff">
+        <div class="container">
+          <div class="section-title" data-aos="fade-up">
+            <h2>Kontak</h2>
+            <p>Hubungi admin kelas untuk informasi akademik dan kegiatan.</p>
+          </div>
+          <div class="contact-wrap">
+            <article class="card contact-list" data-aos="fade-right">
+              <p>Email: kelas8berani@sekolah.sch.id</p>
+              <p>WhatsApp: +62 812-3456-7890</p>
+              <p>Lokasi: Jl. Pendidikan No. 8, Indonesia</p>
+            </article>
+            <article class="card" data-aos="zoom-in">
+              <iframe
+                class="map"
+                loading="lazy"
+                title="Lokasi Sekolah"
+                src="https://www.google.com/maps?q=SMP+Muhammadiyah+12+GKB+Gresik&output=embed"
+              ></iframe>
+            </article>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div class="container">
+        <div class="footer-grid">
+          <div>
+            <h3 style="font-family: Poppins, sans-serif">Kelas 8 Berani</h3>
+            <p>
+              Pusat informasi resmi kelas dengan semangat belajar, berkarya, dan
+              berprestasi.
+            </p>
+          </div>
+          <div>
+            <h4>Navigasi Cepat</h4>
+            <p><a href="#beranda">Beranda</a></p>
+            <p><a href="#profil">Profil Kelas</a></p>
+            <p><a href="#jadwal">Jadwal Piket</a></p>
+            <p><a href="#pengumuman">Pengumuman</a></p>
+          </div>
+          <div>
+            <h4>Media Sosial</h4>
+            <div class="socials">
+              <a href="https://www.instagram.com/sevenempathyy/" aria-label="Instagram"><span class="icon">IG</span></a>
+              <a href="https://www.youtube.com/@smpm12gkb" aria-label="YouTube"><span class="icon">YT</span></a>
+            </div>
+          </div>
+        </div>
+        <p class="copyright">© 2026 Kelas 8 Berani. All Rights Reserved.</p>
+      </div>
+    </footer>
+
+    <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
     <script>
-        // Data Dasar
-        const users = [
-            { id: 'awong', name: "Awong", role: "Siswa (Kucing)", avatar: "🐱", color: "bg-yellow-400" },
-            { id: 1, name: "Budi Santoso", role: "Siswa", avatar: "B", color: "bg-blue-200" },
-            { id: 2, name: "Siti Aminah", role: "Siswa", avatar: "S", color: "bg-pink-200" },
-            { id: 3, name: "Andi Wijaya", role: "Siswa", avatar: "A", color: "bg-green-200" },
-            { id: 4, name: "Lani Meow", role: "Siswa", avatar: "L", color: "bg-purple-200" },
-            { id: 5, name: "Edo Pratama", role: "Siswa", avatar: "E", color: "bg-orange-200" },
-            { id: 6, name: "Meitha Kucing", role: "Siswa", avatar: "M", color: "bg-red-200" },
-            { id: 7, name: "Rizky Transport", role: "Siswa", avatar: "R", color: "bg-teal-200" },
-            { id: 8, name: "Dewi Lestari", role: "Siswa", avatar: "D", color: "bg-indigo-200" },
-            { id: 9, name: "Fajar Sidik", role: "Siswa", avatar: "F", color: "bg-yellow-200" },
-            { id: 10, name: "Gita Cahaya", role: "Siswa", avatar: "G", color: "bg-rose-200" },
-            { id: 11, name: "Reyhan NET", role: "Siswa", avatar: "RN", color: "bg-slate-300" },
-        ];
+      const loadingEl = document.getElementById("loading");
+      const navbar = document.getElementById("navbar");
+      const menuBtn = document.getElementById("menuBtn");
+      const navMenu = document.getElementById("navMenu");
 
-        const coursesData = [
-            { id: 1, title: "Matematika", icon: "📐", color: "bg-blue-500", content: "Hitung volume bagasi Alphard p x l x t!", assignment: "Berapa volume kotak kucing 40cm?" },
-            { id: 2, title: "IPA: Tata Surya", icon: "🌍", color: "bg-purple-500", content: "Bumi berputar seperti rute TransJakarta.", assignment: "Planet terdekat Matahari?" },
-            { id: 3, title: "IPS: Transportasi", icon: "🚆", color: "bg-green-500", content: "Integrasi MRT dan KRL Jabodetabek.", assignment: "Sebutkan rute bus depan rumahmu!" },
-            { id: 4, title: "B. Indonesia", icon: "📺", color: "bg-red-500", content: "Gaya bahasa berita di NET. TV.", assignment: "Ringkas acara NET. jam 9 pagi tadi." }
-        ];
+      window.addEventListener("load", () => {
+        setTimeout(() => {
+          loadingEl.classList.add("hidden");
+        }, 900);
+      });
 
-        // State Management Sederhana
-        let state = {
-            currentUser: null,
-            activeTab: 'dashboard',
-            selectedCourse: null,
-            selectedFriendChat: null,
-            chatText: "",
-            messages: {},
-            confirmationMessage: false
-        };
+      window.addEventListener("scroll", () => {
+        navbar.classList.toggle("scrolled", window.scrollY > 18);
+      });
 
-        function render() {
-            const app = document.getElementById('app');
-            
-            // Layar Login
-            if (!state.currentUser) {
-                app.innerHTML = `
-                <div class="min-h-screen bg-slate-900 flex items-center justify-center p-4">
-                    <div class="bg-white w-full max-w-xs rounded-3xl p-6 shadow-2xl animate-in zoom-in duration-300">
-                        <h1 class="text-xl font-black text-center mb-4">Login Awong 🐱</h1>
-                        <div class="space-y-2 max-h-64 overflow-y-auto pr-1 custom-scrollbar">
-                            ${users.map(u => `
-                                <button onclick="login('${u.id}')" class="w-full flex items-center gap-3 p-2 rounded-xl hover:bg-indigo-50 border border-gray-100 transition-all text-left">
-                                    <div class="${u.color} w-7 h-7 rounded-full flex items-center justify-center font-bold text-xs shadow-sm">${u.avatar}</div>
-                                    <span class="text-sm font-bold truncate">${u.name}</span>
-                                </button>
-                            `).join('')}
-                        </div>
-                    </div>
-                </div>`;
-                return;
-            }
+      menuBtn.addEventListener("click", () => {
+        navMenu.classList.toggle("show");
+        menuBtn.innerHTML = navMenu.classList.contains("show")
+          ? '<span class="icon">&#10005;</span>'
+          : '<span class="icon">&#9776;</span>';
+      });
 
-            // Layout Utama
-            app.innerHTML = `
-            <div class="flex h-screen bg-gray-100 text-slate-900 overflow-hidden font-sans">
-                <!-- Notifikasi -->
-                ${state.confirmationMessage ? `
-                <div class="fixed top-4 left-1/2 -translate-x-1/2 bg-green-500 text-white px-6 py-2 rounded-full shadow-2xl z-[300] animate-bounce">
-                    <span class="font-bold text-sm text-center">tugas akan segera terkonfirmasi</span>
-                </div>` : ''}
+      document.querySelectorAll(".nav-menu a").forEach((link) => {
+        link.addEventListener("click", () => {
+          navMenu.classList.remove("show");
+          menuBtn.innerHTML = '<span class="icon">&#9776;</span>';
+        });
+      });
 
-                <!-- Sidebar -->
-                <div class="w-20 md:w-56 bg-indigo-950 text-white flex flex-col shadow-xl z-20 transition-all">
-                    <div class="p-4 flex items-center justify-center md:justify-start gap-2 border-b border-white/10">
-                        <i data-lucide="graduation-cap" class="text-yellow-400 w-6 h-6"></i>
-                        <h1 class="hidden md:block font-black text-xs uppercase tracking-widest">Moodle</h1>
-                    </div>
-                    <nav class="flex-1 p-2 space-y-1">
-                        <button onclick="setTab('dashboard')" class="w-full flex items-center justify-center md:justify-start gap-3 p-3 rounded-xl transition-all ${state.activeTab === 'dashboard' ? 'bg-indigo-600' : 'hover:bg-indigo-900 opacity-60'}">
-                            <i data-lucide="layout-dashboard" class="w-5 h-5"></i>
-                            <span class="hidden md:block text-xs font-bold">Home</span>
-                        </button>
-                        <button onclick="setTab('courses')" class="w-full flex items-center justify-center md:justify-start gap-3 p-3 rounded-xl transition-all ${state.activeTab === 'courses' ? 'bg-indigo-600' : 'hover:bg-indigo-900 opacity-60'}">
-                            <i data-lucide="book-open" class="w-5 h-5"></i>
-                            <span class="hidden md:block text-xs font-bold">Materi</span>
-                        </button>
-                        <button onclick="setTab('classmates')" class="w-full flex items-center justify-center md:justify-start gap-3 p-3 rounded-xl transition-all ${state.activeTab === 'classmates' ? 'bg-indigo-600' : 'hover:bg-indigo-900 opacity-60'}">
-                            <i data-lucide="users" class="w-5 h-5"></i>
-                            <span class="hidden md:block text-xs font-bold">Teman</span>
-                        </button>
-                    </nav>
-                    <div class="p-2 border-t border-white/10">
-                        <button onclick="logout()" class="w-full flex items-center justify-center p-3 text-red-400 hover:bg-red-500/10 rounded-xl transition-all">
-                            <i data-lucide="log-out" class="w-5 h-5"></i>
-                        </button>
-                    </div>
-                </div>
+      const counters = document.querySelectorAll(".counter");
+      const counterObserver = new IntersectionObserver(
+        (entries, observer) => {
+          entries.forEach((entry) => {
+            if (!entry.isIntersecting) return;
+            const target = Number(entry.target.dataset.target);
+            let current = 0;
+            const increment = Math.max(1, Math.ceil(target / 38));
+            const timer = setInterval(() => {
+              current += increment;
+              if (current >= target) {
+                current = target;
+                clearInterval(timer);
+              }
+              entry.target.textContent = current;
+            }, 30);
+            observer.unobserve(entry.target);
+          });
+        },
+        { threshold: 0.5 }
+      );
 
-                <!-- Konten -->
-                <div class="flex-1 flex flex-col overflow-hidden">
-                    <header class="bg-white border-b px-6 py-3 flex justify-between items-center">
-                        <h2 class="font-black text-sm uppercase tracking-widest">${state.activeTab}</h2>
-                        <div class="flex items-center gap-2">
-                            <span class="text-[10px] font-bold text-slate-400">09:00 AM</span>
-                            <div class="w-8 h-8 bg-yellow-400 rounded-full flex items-center justify-center shadow-inner border border-yellow-500">${state.currentUser.avatar}</div>
-                        </div>
-                    </header>
+      counters.forEach((c) => counterObserver.observe(c));
 
-                    <main class="flex-1 overflow-y-auto p-4 custom-scrollbar">
-                        ${renderTabContent()}
-                    </main>
-                </div>
+      const faqItems = document.querySelectorAll(".faq-item");
+      faqItems.forEach((item) => {
+        const trigger = item.querySelector(".faq-question");
+        trigger.addEventListener("click", () => {
+          faqItems.forEach((other) => {
+            if (other !== item) other.classList.remove("active");
+          });
+          item.classList.toggle("active");
+        });
+      });
 
-                <!-- Modal Chat Mungil -->
-                ${state.selectedFriendChat ? `
-                <div class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm flex items-center justify-center z-[200] p-4" onclick="closeChat()">
-                    <div class="bg-white w-full max-w-[300px] h-[400px] rounded-[30px] shadow-2xl flex flex-col overflow-hidden animate-in zoom-in-95 duration-200" onclick="event.stopPropagation()">
-                        <div class="bg-indigo-600 px-4 py-3 text-white flex justify-between items-center shrink-0">
-                            <div class="flex items-center gap-2">
-                                <div class="w-6 h-6 bg-white/20 rounded-md flex items-center justify-center font-black text-[10px]">${state.selectedFriendChat.avatar}</div>
-                                <span class="font-black text-[10px] truncate w-24">${state.selectedFriendChat.name}</span>
-                            </div>
-                            <button onclick="closeChat()" class="p-1 hover:bg-red-500 rounded transition-all"><i data-lucide="x" class="w-4 h-4"></i></button>
-                        </div>
-                        <div class="flex-1 p-4 overflow-y-auto bg-gray-50/50 space-y-3 custom-scrollbar" id="chat-box">
-                            ${renderMessages()}
-                        </div>
-                        <div class="p-3 bg-white border-t flex gap-2 shrink-0">
-                            <input id="chat-input" onkeydown="handleEnter(event)" class="flex-1 bg-gray-100 rounded-lg px-3 py-2 outline-none focus:ring-2 focus:ring-indigo-100 font-bold text-[10px]" placeholder="Tulis..." value="${state.chatText}" oninput="state.chatText = this.value">
-                            <button onclick="sendMessage()" class="bg-indigo-600 text-white p-2 rounded-lg shadow-md hover:bg-indigo-700 transition-colors"><i data-lucide="send" class="w-4 h-4"></i></button>
-                        </div>
-                    </div>
-                </div>` : ''}
-            </div>`;
+      new Swiper(".swiper", {
+        slidesPerView: 1,
+        spaceBetween: 18,
+        loop: true,
+        autoplay: {
+          delay: 3200,
+          disableOnInteraction: false,
+        },
+        pagination: {
+          el: ".swiper-pagination",
+          clickable: true,
+        },
+        breakpoints: {
+          768: {
+            slidesPerView: 2,
+          },
+        },
+      });
 
-            lucide.createIcons();
-            if (state.selectedFriendChat) {
-                const box = document.getElementById('chat-box');
-                box.scrollTop = box.scrollHeight;
-                document.getElementById('chat-input').focus();
-            }
-        }
-
-        function renderTabContent() {
-            if (state.activeTab === 'dashboard') {
-                return `
-                <div class="space-y-4">
-                    <div class="bg-indigo-600 p-6 rounded-3xl text-white shadow-lg relative overflow-hidden group">
-                        <div class="relative z-10">
-                            <h3 class="font-black text-lg">Halo, ${state.currentUser.name}!</h3>
-                            <p class="text-xs opacity-80">Siap naik MRT dan belajar hari ini?</p>
-                        </div>
-                        <div class="absolute right-[-10px] bottom-[-10px] text-8xl opacity-10 rotate-12 transition-transform group-hover:scale-110">🚆</div>
-                    </div>
-                    <div class="grid grid-cols-2 gap-4">
-                        ${coursesData.map(c => `
-                            <div onclick="openCourse('${c.id}')" class="bg-white p-4 rounded-2xl border border-gray-200 shadow-sm hover:scale-105 transition-all cursor-pointer">
-                                <div class="${c.color} w-8 h-8 rounded-lg flex items-center justify-center text-white mb-2 shadow-sm">${c.icon}</div>
-                                <h4 class="font-bold text-[10px] text-slate-800">${c.title}</h4>
-                            </div>
-                        `).join('')}
-                    </div>
-                </div>`;
-            }
-
-            if (state.activeTab === 'courses') {
-                if (!state.selectedCourse) {
-                    return `
-                    <div class="grid grid-cols-1 gap-3">
-                        ${coursesData.map(c => `
-                            <div onclick="openCourse('${c.id}')" class="bg-white p-4 rounded-2xl flex items-center gap-4 cursor-pointer hover:shadow-md transition-all border border-gray-100">
-                                <div class="${c.color} w-10 h-10 rounded-xl flex items-center justify-center text-white font-bold shadow-sm text-xl">${c.icon}</div>
-                                <span class="font-bold text-xs">${c.title}</span>
-                            </div>
-                        `).join('')}
-                    </div>`;
-                } else {
-                    return `
-                    <div class="max-w-2xl mx-auto">
-                        <div class="bg-white rounded-3xl shadow-xl overflow-hidden animate-in zoom-in-95 duration-300">
-                            <div class="${state.selectedCourse.color} p-4 text-white flex justify-between items-center shadow-inner">
-                                <h2 class="font-black text-xs uppercase tracking-tighter">${state.selectedCourse.title}</h2>
-                                <button onclick="setTab('courses')"><i data-lucide="chevron-left" class="w-5 h-5"></i></button>
-                            </div>
-                            <div class="p-6 space-y-4">
-                                <p class="text-sm font-bold text-slate-600 italic leading-relaxed">"${state.selectedCourse.content}"</p>
-                                <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200">
-                                    <p class="text-[10px] font-black mb-3 text-indigo-900 uppercase">Tugas Mandiri:</p>
-                                    <p class="text-xs font-bold mb-5 text-slate-700">${state.selectedCourse.assignment}</p>
-                                    <button onclick="submitTask()" class="w-full bg-indigo-600 text-white py-3 rounded-xl text-xs font-black shadow-lg shadow-indigo-100 active:scale-95 transition-all">KUMPULKAN TUGAS</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>`;
-                }
-            }
-
-            if (state.activeTab === 'classmates') {
-                return `
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    ${users.filter(u => u.id !== state.currentUser.id).map(f => `
-                        <div class="bg-white p-3 rounded-2xl border border-gray-200 flex items-center gap-3 shadow-sm">
-                            <div class="${f.color} w-8 h-8 rounded-full flex items-center justify-center font-bold text-xs shadow-inner">${f.avatar}</div>
-                            <span class="flex-1 font-bold text-[10px] truncate text-slate-700">${f.name}</span>
-                            <button onclick="openChat('${f.id}')" class="p-2 bg-indigo-50 text-indigo-600 rounded-lg hover:bg-indigo-600 hover:text-white transition-colors shadow-sm">
-                                <i data-lucide="message-square" class="w-4 h-4"></i>
-                            </button>
-                        </div>
-                    `).join('')}
-                </div>`;
-            }
-        }
-
-        function renderMessages() {
-            const list = state.messages[state.selectedFriendChat.id] || [];
-            if (list.length === 0) return `<p class="text-[10px] text-center mt-10 text-slate-300 font-bold italic">Belum ada komentar...</p>`;
-            return list.map(msg => `
-                <div class="flex flex-col ${msg.sender === state.currentUser.name ? 'items-end' : 'items-start'}">
-                    <div class="p-2.5 rounded-xl max-w-[90%] text-[10px] font-bold shadow-sm ${msg.sender === state.currentUser.name ? 'bg-indigo-600 text-white rounded-tr-none' : 'bg-white text-slate-800 rounded-tl-none border border-gray-100'}">
-                        ${msg.text}
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        // Fungsi Aksi
-        function login(id) {
-            state.currentUser = users.find(u => u.id === id);
-            render();
-        }
-
-        function logout() {
-            state.currentUser = null;
-            render();
-        }
-
-        function setTab(tab) {
-            state.activeTab = tab;
-            state.selectedCourse = null;
-            state.selectedFriendChat = null;
-            render();
-        }
-
-        function openCourse(id) {
-            state.selectedCourse = coursesData.find(c => c.id == id);
-            state.activeTab = 'courses';
-            render();
-        }
-
-        function openChat(friendId) {
-            state.selectedFriendChat = users.find(u => u.id == friendId);
-            render();
-        }
-
-        function closeChat() {
-            state.selectedFriendChat = null;
-            state.chatText = "";
-            render();
-        }
-
-        function sendMessage() {
-            if (!state.chatText.trim()) return;
-            const fid = state.selectedFriendChat.id;
-            const userMsg = { sender: state.currentUser.name, text: state.chatText };
-            
-            if (!state.messages[fid]) state.messages[fid] = [];
-            state.messages[fid].push(userMsg);
-            
-            const savedText = state.chatText;
-            state.chatText = "";
-            render();
-
-            setTimeout(() => {
-                const autoReply = { sender: state.selectedFriendChat.name, text: `Halo Awong! Komentar "${savedText}" keren. Ayo lanjut belajar!` };
-                state.messages[fid].push(autoReply);
-                render();
-            }, 1000);
-        }
-
-        function handleEnter(e) {
-            if (e.key === 'Enter') sendMessage();
-        }
-
-        function submitTask() {
-            state.confirmationMessage = true;
-            render();
-            setTimeout(() => {
-                state.confirmationMessage = false;
-                render();
-            }, 3000);
-        }
-
-        // Jalankan awal
-        render();
+      AOS.init({
+        duration: 800,
+        once: true,
+        easing: "ease-out-cubic",
+      });
     </script>
-</body>
+  </body>
 </html>
-
